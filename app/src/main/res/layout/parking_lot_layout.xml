@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
+    <RelativeLayout
+        android:id="@+id/parkingTopLotLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="6dp"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="Lot X"
+            style="@style/ParkingLotTextStyle"
+            android:layout_alignParentStart="true"
+            android:id="@+id/parkingLotTitleText" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="87%"
+            style="@style/ParkingLotTextStyle"
+            android:id="@+id/parkingLotRightText" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="234/677"
+            android:id="@+id/parkingLotMiddleText"
+            style="@style/ParkingLotTextStyle"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+    <ProgressBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        style="@android:style/Widget.Holo.Light.ProgressBar.Horizontal"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/parkingTopLotLayout"/>
+</RelativeLayout>
