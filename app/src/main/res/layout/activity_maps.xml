@@ -36,7 +36,7 @@
         android:layout_above="@+id/bottomEmptySpace"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="64dp"
         android:src="@drawable/ic_refresh_white_48dp"
         app:borderWidth="0dp" />
 

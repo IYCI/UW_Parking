@@ -18,7 +18,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
 
@@ -27,8 +26,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
-
     private GoogleMap mMap;
+
+    final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,15 +43,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         myFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Log.d("MapsActivity", "FAB got pressed");
-                // Show Toast
+
                 MainActivity.getFAB().callOnClick();
                 ArrayList<ParkingLot> mParkingLots = getParkingFromPref();
                 addMarkers(mParkingLots);
-//                Toast.makeText(getApplicationContext(), "Data Updated", Toast.LENGTH_LONG).show();
-        }
+            }
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 
     /**
      * Manipulates the map once available.
@@ -72,22 +75,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLng(uWaterloo));
         mMap.moveCamera(CameraUpdateFactory.zoomTo(15.1f));
 
-        // TODO: somehow show last update time, snack bar or toast
-        // and also add fab and bottom sheet if possible
-        // current point: use a whatever layout to contain map and also my fab
-
         enableMyLocation();
-
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            public boolean onMarkerClick(Marker marker) {
-                if (marker.isInfoWindowShown()) {
-                    marker.hideInfoWindow();
-                } else {
-                    marker.showInfoWindow();
-                }
-                return true;
-            }
-        });
 
         // set map padding due to translucent status and nivigation bar
         int navigationBarId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
@@ -103,9 +91,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setPadding(0, statusBarHeight, 0, navigationBarHeight);
 
         // Add Markers for Lots
+        MainActivity.getFAB().callOnClick();
         ArrayList<ParkingLot> mParkingLots = getParkingFromPref();
         addMarkers(mParkingLots);
     }
+
+
 
     public void addMarkers(ArrayList<ParkingLot> mParkingLots){
         mMap.clear();
@@ -146,11 +137,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},1);
-            enableMyLocation();
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         } else if (mMap != null) {
             // Access to the location has been granted to the app.
             mMap.setMyLocationEnabled(true);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    enableMyLocation();
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+            }
+            // other 'case' lines to check for other
+            // permissions this app might request
         }
     }
 

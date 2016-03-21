@@ -3,7 +3,6 @@ package com.YC2010.UWparking;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
-import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,10 +26,10 @@ public class ParkingLotAdpater extends BaseAdapter {
     Context mContext;
     LayoutInflater mLayoutInflater;
 
-    public ParkingLotAdpater(Context context, Bundle bundle){
+    public ParkingLotAdpater(Context context){
         mLayoutInflater = LayoutInflater.from(context);
-        mParkingLots = bundle.getParcelableArrayList("LOT_LIST");
         mContext = context;
+        updateView();
     }
 
     @Override
@@ -72,7 +71,6 @@ public class ParkingLotAdpater extends BaseAdapter {
         TextView rightTextView = (TextView)  v.findViewById(R.id.parkingLotRightText);
         rightTextView.setText(newProgress + "%");
 
-
         return v;
     }
 
@@ -80,7 +78,7 @@ public class ParkingLotAdpater extends BaseAdapter {
         // update data set
         SharedPreferences mPrefs = mContext.getSharedPreferences("Parking Pref", mContext.MODE_PRIVATE);
         int lotLength = mPrefs.getInt("lot_num", 0);
-        mParkingLots.clear();
+        mParkingLots = new ArrayList<>();
         for (int i = 0; i < lotLength; i++) {
             String mParkingJSONString = mPrefs.getString("LOT_" + i, "");
             if (!mParkingJSONString.equals("")){
@@ -96,7 +94,6 @@ public class ParkingLotAdpater extends BaseAdapter {
                 }
             }
         }
-
         notifyDataSetChanged();
     }
 }

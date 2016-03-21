@@ -41,17 +41,7 @@ public class MainActivity extends AppCompatActivity {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ParkingLotsFetchTask parkingLotsFetchTask = new ParkingLotsFetchTask(MainActivity.this, new AsyncTaskCallbackInterface() {
-                        @Override
-                        public void onOperationComplete(Bundle bundle) {
-                            ListView mListView = (ListView) findViewById(R.id.lotListView);
-                            if (mListView != null) {
-                                ParkingLotAdpater mAdapter = (ParkingLotAdpater) mListView.getAdapter();
-                                mAdapter.updateView();
-                            }
-                        }
-                    });
-                    parkingLotsFetchTask.execute();
+                    updateParkingLot();
                 }
             });
         }
@@ -67,19 +57,17 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+    }
 
-        // put sample data into Bundle
-        Bundle sampleDataBundle = new Bundle();
-        ArrayList<ParkingLot> mParkingLots = getParkingFromPref();
-        if (mParkingLots.size() == 0 && fab != null){
-            fab.callOnClick();
-        }
-        sampleDataBundle.putParcelableArrayList("LOT_LIST", mParkingLots);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateParkingLot();
 
         // set adapter
         ListView mListView = (ListView) findViewById(R.id.lotListView);
         if (mListView != null) {
-            mListView.setAdapter(new ParkingLotAdpater(getApplicationContext(), sampleDataBundle));
+            mListView.setAdapter(new ParkingLotAdpater(getApplicationContext()));
         }
     }
 
@@ -112,6 +100,20 @@ public class MainActivity extends AppCompatActivity {
 
     public static FloatingActionButton getFAB(){
         return fab;
+    }
+
+    public void updateParkingLot(){
+        ParkingLotsFetchTask parkingLotsFetchTask = new ParkingLotsFetchTask(MainActivity.this, new AsyncTaskCallbackInterface() {
+            @Override
+            public void onOperationComplete(Bundle bundle) {
+                ListView mListView = (ListView) findViewById(R.id.lotListView);
+                if (mListView != null) {
+                    ParkingLotAdpater mAdapter = (ParkingLotAdpater) mListView.getAdapter();
+                    mAdapter.updateView();
+                }
+            }
+        });
+        parkingLotsFetchTask.execute();
     }
 
 }

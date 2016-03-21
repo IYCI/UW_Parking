@@ -66,11 +66,9 @@ public class ParkingLotsFetchTask extends AsyncTask<List<String>, Void, Bundle> 
             }
             prefsEditor.commit();
             return bundle;
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return bundle;
     }
 

@@ -5,8 +5,6 @@ import android.os.Parcelable;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.GregorianCalendar;
-
 /**
  * Created by jason on 3/20/2016.
  */
