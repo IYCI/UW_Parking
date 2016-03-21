@@ -1,4 +1,4 @@
 # UW Parking
-<a href="" target="_blank">
+<a href="https://play.google.com/store/apps/details?id=com.YC2010.UWparking" target="_blank">
 <img align="middle" alt="Get it on Google Play" src="http://steverichey.github.io/google-play-badge-svg/img/en_get.svg" />
 </a>
