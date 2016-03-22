@@ -6,5 +6,6 @@
 .DS_Store
 /build
 /captures
-app/src/main/java/com.YC2010.UWparking.Tools.java
-build.gradle
+app/src/main/java/com/YC2010/UWparking/Tools.java
+app/build.gradle
+*.apk
