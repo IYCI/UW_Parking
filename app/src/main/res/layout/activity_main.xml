@@ -32,17 +32,6 @@
         android:src="@drawable/ic_refresh_white_48dp"
         android:layout_margin="@dimen/fab_margin" />
 
-    <Button
-        android:id="@+id/viewMapButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
-        android:layout_marginBottom="108dp"
-        android:textColor="@android:color/black"
-        android:drawableLeft="@drawable/ic_map_black_36dp"
-        android:text="View On Map"
-        />
-
     <ProgressBar
         android:layout_width="56dp"
         android:layout_height="56dp"

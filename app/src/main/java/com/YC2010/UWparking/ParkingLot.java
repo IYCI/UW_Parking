@@ -1,45 +1,38 @@
 package com.YC2010.UWparking;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.android.gms.maps.model.LatLng;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by jason on 3/20/2016.
  */
-public class ParkingLot implements Parcelable {
+public class ParkingLot {
     private String name;
+    private String conventionalLocation;
     private int capacity;
     private int availability;
     private LatLng location;
+    private Date lastUpdateTime;
 
-    public ParkingLot(String name, int capacity, int availability, LatLng location) {
+    public ParkingLot(String name, String cName, int capacity, int availability, LatLng location, String time) {
         this.name = name;
+        this.conventionalLocation = cName;
         this.capacity = capacity;
         this.availability = availability;
         this.location = location;
-
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:sszzzzz");
+        try {
+            lastUpdateTime= sdf.parse(time);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public ParkingLot(Parcel src) {
-        this.name = src.readString();
-        this.capacity = src.readInt();
-        this.availability = src.readInt();
-        this.location = (LatLng)src.readValue(LatLng.class.getClassLoader());
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(name);
-        dest.writeInt(capacity);
-        dest.writeInt(availability);
-        dest.writeValue(location);
+    public String getConventionalLocation() {
+        return conventionalLocation;
     }
 
     public String getName() {
@@ -76,5 +69,9 @@ public class ParkingLot implements Parcelable {
 
     public int getCurrentCount(){
         return capacity - availability;
+    }
+
+    public Date getLastUpdateTime() {
+        return lastUpdateTime;
     }
 }

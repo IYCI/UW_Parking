@@ -1,7 +1,6 @@
 package com.YC2010.UWparking;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -11,10 +10,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import com.google.android.gms.maps.model.LatLng;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -64,6 +59,9 @@ public class ParkingLotAdpater extends BaseAdapter {
         TextView titleTextView = (TextView)  v.findViewById(R.id.parkingLotTitleText);
         titleTextView.setText(mParkingLots.get(position).getName());
 
+        TextView descriptionTextView = (TextView)  v.findViewById(R.id.parkingLotDiscText);
+        descriptionTextView.setText("(" + mParkingLots.get(position).getConventionalLocation() + ")");
+
         TextView middleTextView = (TextView)  v.findViewById(R.id.parkingLotMiddleText);
         middleTextView.setText(mParkingLots.get(position).getCapacity() - mParkingLots.get(position).getAvailability() +
                 "/" + mParkingLots.get(position).getCapacity());
@@ -76,24 +74,7 @@ public class ParkingLotAdpater extends BaseAdapter {
 
     public void updateView() {
         // update data set
-        SharedPreferences mPrefs = mContext.getSharedPreferences("Parking Pref", mContext.MODE_PRIVATE);
-        int lotLength = mPrefs.getInt("lot_num", 0);
-        mParkingLots = new ArrayList<>();
-        for (int i = 0; i < lotLength; i++) {
-            String mParkingJSONString = mPrefs.getString("LOT_" + i, "");
-            if (!mParkingJSONString.equals("")){
-                try {
-                    JSONObject mParkingJSON = new JSONObject(mParkingJSONString);
-                    mParkingLots.add(new ParkingLot(mParkingJSON.getString("lot_name"),
-                            Integer.parseInt(mParkingJSON.getString("capacity")),
-                            Integer.parseInt(mParkingJSON.getString("capacity")) - Integer.parseInt(mParkingJSON.getString("current_count")),
-                            new LatLng(Float.parseFloat(mParkingJSON.getString("latitude")), Float.parseFloat(mParkingJSON.getString("longitude")))));
-                }
-                catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        }
+        mParkingLots = Utils.getParkingFromPref(mContext);
         notifyDataSetChanged();
     }
 }

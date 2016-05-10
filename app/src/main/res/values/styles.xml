@@ -21,6 +21,16 @@
         <item name="android:textColor">@color/common_google_signin_btn_text_light_default</item>
     </style>
 
+    <style name="ParkingLotSignStyle">
+        <item name="android:textSize">42sp</item>
+        <item name="android:textColor">@color/common_google_signin_btn_text_light_default</item>
+    </style>
+
+    <style name="updateTimeStyle">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/common_google_signin_btn_text_light_default</item>
+    </style>
+
     <style name="SpecialIconTextStyle">
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/common_google_signin_btn_text_light_default</item>

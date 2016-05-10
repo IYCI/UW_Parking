@@ -1,7 +1,6 @@
 package com.YC2010.UWparking;
 
 import android.Manifest;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -11,6 +10,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -20,8 +20,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -44,8 +42,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View v) {
                 Log.d("MapsActivity", "FAB got pressed");
 
-                MainActivity.getFAB().callOnClick();
-                ArrayList<ParkingLot> mParkingLots = getParkingFromPref();
+                updateParkingLot();
+                ArrayList<ParkingLot> mParkingLots = Utils.getParkingFromPref(getApplicationContext());
                 addMarkers(mParkingLots);
             }
         });
@@ -91,9 +89,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setPadding(0, statusBarHeight, 0, navigationBarHeight);
 
         // Add Markers for Lots
-        MainActivity.getFAB().callOnClick();
-        ArrayList<ParkingLot> mParkingLots = getParkingFromPref();
-        addMarkers(mParkingLots);
+        if (MainActivity.getFAB() != null) {
+            MainActivity.getFAB().callOnClick();
+            ArrayList<ParkingLot> mParkingLots = Utils.getParkingFromPref(getApplicationContext());
+            addMarkers(mParkingLots);
+        }
     }
 
 
@@ -166,25 +166,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    public ArrayList<ParkingLot> getParkingFromPref(){
-        SharedPreferences mPrefs = getSharedPreferences("Parking Pref", MODE_PRIVATE);
-        int lotLength = mPrefs.getInt("lot_num", 0);
-        ArrayList<ParkingLot> mParkingLots = new ArrayList<>();
-        for (int i = 0; i < lotLength; i++) {
-            String mParkingJSONString = mPrefs.getString("LOT_" + i, "");
-            if (!mParkingJSONString.equals("")){
-                try {
-                    JSONObject mParkingJSON = new JSONObject(mParkingJSONString);
-                    mParkingLots.add(new ParkingLot(mParkingJSON.getString("lot_name"),
-                            Integer.parseInt(mParkingJSON.getString("capacity")),
-                            Integer.parseInt(mParkingJSON.getString("capacity")) - Integer.parseInt(mParkingJSON.getString("current_count")),
-                            new LatLng(Float.parseFloat(mParkingJSON.getString("latitude")), Float.parseFloat(mParkingJSON.getString("longitude")))));
+    public void updateParkingLot(){
+        ParkingLotsFetchTask parkingLotsFetchTask = new ParkingLotsFetchTask(this, new AsyncTaskCallbackInterface() {
+            @Override
+            public void onOperationComplete(Bundle bundle) {
+                if (bundle.getBoolean("valid_return")) {
+                    Toast.makeText(getApplicationContext(), "Data Updated", Toast.LENGTH_SHORT).show();
                 }
-                catch (Exception e){
-                    e.printStackTrace();
+                else{
+                    Toast.makeText(getApplicationContext(), "Something went wrong, check your network condition", Toast.LENGTH_SHORT).show();
                 }
             }
-        }
-        return mParkingLots;
+        });
+        parkingLotsFetchTask.execute();
     }
 }

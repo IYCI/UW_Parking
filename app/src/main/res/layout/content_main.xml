@@ -17,4 +17,26 @@
         android:layout_height="wrap_content"
         android:id="@+id/lotListView" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/lastUpdateText"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/lotListView"
+        android:layout_marginTop="24dp"
+        android:textStyle="italic"
+        style="@style/updateTimeStyle"/>
+
+    <Button
+        android:id="@+id/viewMapButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lastUpdateText"
+        android:layout_marginTop="24dp"
+        android:layout_centerHorizontal="true"
+        android:textColor="@android:color/black"
+        android:drawableLeft="@drawable/ic_map_black_36dp"
+        android:text="View On Map"
+        />
+
 </RelativeLayout>

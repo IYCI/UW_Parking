@@ -12,13 +12,24 @@
         >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="20dp"
             android:layout_height="wrap_content"
             android:textStyle="bold"
-            android:text="Lot X"
+            android:maxLength="2"
+            android:text="X"
             style="@style/ParkingLotTextStyle"
             android:layout_alignParentStart="true"
-            android:id="@+id/parkingLotTitleText" />
+            android:id="@+id/parkingLotTitleText"
+            android:layout_marginEnd="6dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:text="(CIF)"
+            style="@style/ParkingLotTextStyle"
+            android:id="@+id/parkingLotDiscText"
+            android:layout_toEndOf="@+id/parkingLotTitleText" />
 
         <TextView
             android:layout_width="wrap_content"

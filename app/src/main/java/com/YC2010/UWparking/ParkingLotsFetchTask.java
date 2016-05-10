@@ -7,11 +7,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,7 +32,9 @@ public class ParkingLotsFetchTask extends AsyncTask<List<String>, Void, Bundle> 
     protected void onPreExecute() {
         super.onPreExecute();
         progDailog = (ProgressBar) mActivity.findViewById(R.id.updateProgressBar);
-        progDailog.setVisibility(View.VISIBLE);
+        if (progDailog != null) {
+            progDailog.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -51,7 +53,7 @@ public class ParkingLotsFetchTask extends AsyncTask<List<String>, Void, Bundle> 
             JSONObject examObject = Connections.getJSON_from_url(exam_url);
 
             // check valid data return
-            if (!examObject.getJSONObject("meta").getString("message").equals("Request successful")) {
+            if (examObject == null || !examObject.getJSONObject("meta").getString("message").equals("Request successful")) {
                 Log.d("FinalsFetchTask",examObject.toString());
                 return bundle;
             }
@@ -60,6 +62,7 @@ public class ParkingLotsFetchTask extends AsyncTask<List<String>, Void, Bundle> 
             SharedPreferences mPrefs = mActivity.getSharedPreferences("Parking Pref", mActivity.MODE_PRIVATE);
             SharedPreferences.Editor prefsEditor = mPrefs.edit();
             prefsEditor.putInt("lot_num", parkingData.length());
+            prefsEditor.putLong("last_get_time", (new Date()).getTime());
             for (int i = 0; i < parkingData.length(); i++){
                 JSONObject parkingLotJSON = parkingData.getJSONObject(i);
                 prefsEditor.putString("LOT_" + i, parkingLotJSON.toString());
@@ -74,14 +77,10 @@ public class ParkingLotsFetchTask extends AsyncTask<List<String>, Void, Bundle> 
 
     @Override
     protected void onPostExecute(final Bundle bundle) {
-        progDailog.setVisibility(View.INVISIBLE);
+        if (progDailog != null) {
+            progDailog.setVisibility(View.INVISIBLE);
+        }
         mAsyncTaskCallbackInterface.onOperationComplete(bundle);
-        if (bundle.getBoolean("valid_return")) {
-            Toast.makeText(mActivity, "Data Updated", Toast.LENGTH_SHORT).show();
-        }
-        else{
-            Toast.makeText(mActivity, "Data Update Fail", Toast.LENGTH_SHORT).show();
-        }
     }
 
 }
